@@ -1,9 +1,16 @@
+#include <stdbool.h>
 #include "LedDriver.h"
 
 enum
 {
     ALL_LEDS_ON = ~0,
     ALL_LEDS_OFF = ~ALL_LEDS_ON
+};
+
+enum
+{
+    FIRST_LED = 1,
+    LAST_LED = 16
 };
 
 static uint16_t* ledsAddress;
@@ -19,6 +26,21 @@ static void updateHardware(void)
     *ledsAddress = ledsImage;
 }
 
+static bool IsLedOutOfBounds(int ledNumber)
+{
+    return (ledNumber < FIRST_LED) || (ledNumber > LAST_LED);
+}
+
+static void setLedImageBit(int ledNumber)
+{
+    ledsImage |= convertLedNumberToBit(ledNumber);
+}
+
+static void clearLedImageBit(int ledNumber)
+{
+    ledsImage &= ~(convertLedNumberToBit(ledNumber));
+}
+
 void LedDriver_Create(uint16_t* address)
 {
     ledsAddress = address;
@@ -32,19 +54,19 @@ void LedDriver_Destroy(void)
 
 void LedDriver_TurnOn(int ledNumber)
 {
-    if(ledNumber <= 0 || ledNumber > 16)
+    if(IsLedOutOfBounds(ledNumber))
         return;
 
-    ledsImage |= convertLedNumberToBit(ledNumber);
+    setLedImageBit(ledNumber);
     updateHardware();
 }
 
 void LedDriver_TurnOff(int ledNumber)
 {
-    if(ledNumber <= 0 || ledNumber > 16)
+    if(IsLedOutOfBounds(ledNumber))
         return;
 
-    ledsImage &= ~(convertLedNumberToBit(ledNumber));
+    clearLedImageBit(ledNumber);
     updateHardware();
 }
 
