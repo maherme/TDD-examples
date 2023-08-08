@@ -94,6 +94,11 @@ void OutOfBoundsProducesRuntimeError(void)
     TEST_ASSERT_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
 }
 
+void OutOfBoundsToDo(void)
+{
+    TEST_IGNORE_MESSAGE("What should we do during runtime?");
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -108,5 +113,6 @@ int main(void)
     RUN_TEST(OutOfBoundsTurnOnDoesNoHarm);
     RUN_TEST(OutOfBoundsTurnOffDoesNoHarm);
     RUN_TEST(OutOfBoundsProducesRuntimeError);
+    RUN_TEST(OutOfBoundsToDo);
     return UNITY_END();
 }
