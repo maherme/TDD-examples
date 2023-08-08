@@ -12,6 +12,8 @@ BLD_DIR = ./build
 OBJ_DIR = $(BLD_DIR)/obj
 SRC_DIR = ./src
 TST_DIR = ./test
+UTIL_DIR = ./util
+MOCK_DIR = ./mocks
 UNITY_DIR = ../unity/src
 
 # Search for source files and define OBJS as list of needed object files
@@ -19,6 +21,8 @@ UNITY_DIR = ../unity/src
 SOURCES = $(shell find $(SRC_DIR) -type f -name "*.c")
 SOURCES += $(shell find $(TST_DIR) -type f -name "*.c")
 SOURCES += $(shell find $(UNITY_DIR) -type f -name "*.c")
+SOURCES += $(shell find $(UTIL_DIR) -type f -name "*.c")
+SOURCES += $(shell find $(MOCK_DIR) -type f -name "*.c")
 #$(info SOURCES="$(SOURCES)")
 VPATH = $(dir $(SOURCES))
 #$(info VPATH="$(VPATH)")
