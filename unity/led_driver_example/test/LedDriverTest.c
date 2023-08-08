@@ -32,11 +32,19 @@ void TurnOffLedOne(void)
     TEST_ASSERT_EQUAL_HEX16(0, virtualLeds);
 }
 
+void TurnOnMultipleLeds(void)
+{
+    LedDriver_TurnOn(9);
+    LedDriver_TurnOn(8);
+    TEST_ASSERT_EQUAL_HEX16(0x180, virtualLeds);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(LedsOffAfterCreate);
     RUN_TEST(TurnOnLedOne);
     RUN_TEST(TurnOffLedOne);
+    RUN_TEST(TurnOnMultipleLeds);
     return UNITY_END();
 }
