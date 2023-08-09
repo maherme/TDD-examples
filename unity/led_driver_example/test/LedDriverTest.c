@@ -40,6 +40,14 @@ void TurnOnMultipleLeds(void)
     TEST_ASSERT_EQUAL_HEX16(0x180, virtualLeds);
 }
 
+void TurnOffMultipleLeds(void)
+{
+    LedDriver_TurnAllOn();
+    LedDriver_TurnOff(9);
+    LedDriver_TurnOff(8);
+    TEST_ASSERT_EQUAL_HEX16((~0x180)&0xFFFF, virtualLeds);
+}
+
 void TurnOffAnyLed(void)
 {
     LedDriver_TurnAllOn();
@@ -51,6 +59,12 @@ void AllOn(void)
 {
     LedDriver_TurnAllOn();
     TEST_ASSERT_EQUAL_HEX16(0xFFFF, virtualLeds);
+}
+
+void AllOff(void)
+{
+    LedDriver_TurnAllOff();
+    TEST_ASSERT_EQUAL_HEX16(0, virtualLeds);
 }
 
 void LedMemoryIsNotReadable(void)
@@ -99,6 +113,28 @@ void OutOfBoundsToDo(void)
     TEST_IGNORE_MESSAGE("What should we do during runtime?");
 }
 
+void OutOfBoundsLedsAreAlwaysOff(void)
+{
+    TEST_ASSERT_TRUE(LedDriver_IsOff(0));
+    TEST_ASSERT_TRUE(LedDriver_IsOff(17));
+    TEST_ASSERT_FALSE(LedDriver_IsOn(0));
+    TEST_ASSERT_FALSE(LedDriver_IsOn(17));
+}
+
+void IsOn(void)
+{
+    TEST_ASSERT_FALSE(LedDriver_IsOn(11));
+    LedDriver_TurnOn(11);
+    TEST_ASSERT_TRUE(LedDriver_IsOn(11));
+}
+
+void IsOff(void)
+{
+    TEST_ASSERT_TRUE(LedDriver_IsOff(12));
+    LedDriver_TurnOn(12);
+    TEST_ASSERT_FALSE(LedDriver_IsOff(12));
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -106,13 +142,18 @@ int main(void)
     RUN_TEST(TurnOnLedOne);
     RUN_TEST(TurnOffLedOne);
     RUN_TEST(TurnOnMultipleLeds);
+    RUN_TEST(TurnOffMultipleLeds);
     RUN_TEST(TurnOffAnyLed);
     RUN_TEST(AllOn);
+    RUN_TEST(AllOff);
     RUN_TEST(LedMemoryIsNotReadable);
     RUN_TEST(UpperAndLowerBounds);
     RUN_TEST(OutOfBoundsTurnOnDoesNoHarm);
     RUN_TEST(OutOfBoundsTurnOffDoesNoHarm);
     RUN_TEST(OutOfBoundsProducesRuntimeError);
     RUN_TEST(OutOfBoundsToDo);
+    RUN_TEST(OutOfBoundsLedsAreAlwaysOff);
+    RUN_TEST(IsOn);
+    RUN_TEST(IsOff);
     return UNITY_END();
 }
