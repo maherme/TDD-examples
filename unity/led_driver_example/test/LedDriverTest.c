@@ -103,7 +103,6 @@ void OutOfBoundsTurnOffDoesNoHarm(void)
 void OutOfBoundsProducesRuntimeError(void)
 {
     LedDriver_TurnOn(-1);
-    RUNTIME_ERROR("LED Driver: out-of-bounds LED", -1);
     TEST_ASSERT_EQUAL_STRING("LED Driver: out-of-bounds LED", RuntimeErrorStub_GetLastError());
     TEST_ASSERT_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
 }

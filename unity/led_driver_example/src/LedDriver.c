@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "LedDriver.h"
+#include "RuntimeError.h"
 
 enum
 {
@@ -28,7 +29,13 @@ static void updateHardware(void)
 
 static bool IsLedOutOfBounds(int ledNumber)
 {
-    return (ledNumber < FIRST_LED) || (ledNumber > LAST_LED);
+    if((ledNumber < FIRST_LED) || (ledNumber > LAST_LED))
+    {
+        RUNTIME_ERROR("LED Driver: out-of-bounds LED", ledNumber);
+        return true;
+    }
+
+    return false;
 }
 
 static void setLedImageBit(int ledNumber)
