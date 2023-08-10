@@ -11,12 +11,16 @@ BLD_DIR = ./build
 OBJ_DIR = $(BLD_DIR)/obj
 SRC_DIR = ./src
 TST_DIR = ./test
+UTIL_DIR = ./util
+MOCK_DIR = ./mocks
 CPPUTEST_DIR = ../cpputest
 
 # Search for source files and define OBJS as list of needed object files
 # Source directories are included in VPATH for searching prerequisites
 SOURCES = $(shell find $(SRC_DIR) -type f -name "*.c")
 SOURCES += $(shell find $(TST_DIR) -type f -name "*.cpp")
+SOURCES += $(shell find $(UTIL_DIR) -type f -name "*.c")
+SOURCES += $(shell find $(MOCK_DIR) -type f -name "*.c")
 #$(info SOURCES="$(SOURCES)")
 VPATH := $(dir $(SOURCES))
 #$(info VPATH="$(VPATH)")

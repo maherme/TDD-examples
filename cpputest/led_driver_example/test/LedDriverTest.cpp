@@ -1,6 +1,7 @@
 #include "CppUTest/TestHarness.h"
 
 #include "LedDriver.h"
+#include "RuntimeErrorStub.h"
 
 static uint16_t virtualLeds;
 
@@ -89,3 +90,15 @@ TEST(LedDriver, OutOfBoundsTurnOffDoesNoHarm)
     LedDriver_TurnOff(3141);
     LONGS_EQUAL(0xFFFF, virtualLeds);
 }
+
+TEST(LedDriver, OutOfBoundsProducesRuntimeError)
+{
+    LedDriver_TurnOn(-1);
+    STRCMP_EQUAL("LED Driver: out-of-bounds LED", RuntimeErrorStub_GetLastError());
+}
+
+IGNORE_TEST(LedDriver, OutOfBoundsToDo)
+{
+    /* TODO */
+}
+

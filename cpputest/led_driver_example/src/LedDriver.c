@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "RuntimeError.h"
 #include "LedDriver.h"
 
 enum
@@ -30,7 +31,10 @@ void LedDriver_Create(uint16_t* address)
 void LedDriver_TurnOn(int ledNumber)
 {
     if(ledNumber <= 0 || ledNumber > 16)
+    {
+        RUNTIME_ERROR("LED Driver: out-of-bounds LED", ledNumber);
         return;
+    }
 
     ledsImage |= convertLedNumberToBit(ledNumber);
     updateHardware();
@@ -40,7 +44,10 @@ void LedDriver_TurnOn(int ledNumber)
 void LedDriver_TurnOff(int ledNumber)
 {
     if(ledNumber <= 0 || ledNumber > 16)
+    {
+        RUNTIME_ERROR("LED Driver: out-of-bounds LED", ledNumber);
         return;
+    }
 
     ledsImage &= ~(convertLedNumberToBit(ledNumber));
     updateHardware();
