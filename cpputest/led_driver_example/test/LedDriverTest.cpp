@@ -98,8 +98,44 @@ TEST(LedDriver, OutOfBoundsProducesRuntimeError)
     LONGS_EQUAL(-1, RuntimeErrorStub_GetLastParameter());
 }
 
+TEST(LedDriver, OutOfBoundsLedsAreAlwaysOff)
+{
+    CHECK_EQUAL(true, LedDriver_IsOff(0));
+    CHECK_EQUAL(true, LedDriver_IsOff(0));
+    CHECK_EQUAL(false, LedDriver_IsOn(0));
+    CHECK_EQUAL(false, LedDriver_IsOn(117));
+}
+
 IGNORE_TEST(LedDriver, OutOfBoundsToDo)
 {
     /* TODO */
 }
 
+TEST(LedDriver, IsOn)
+{
+    CHECK_EQUAL(false, LedDriver_IsOn(11));
+    LedDriver_TurnOn(11);
+    CHECK_EQUAL(true, LedDriver_IsOn(11));
+}
+
+TEST(LedDriver, IsOff)
+{
+    CHECK_EQUAL(true, LedDriver_IsOff(12));
+    LedDriver_TurnOn(12);
+    CHECK_EQUAL(false, LedDriver_IsOff(12));
+}
+
+TEST(LedDriver, TurnOffMultipleLeds)
+{
+    LedDriver_TurnAllOn();
+    LedDriver_TurnOff(9);
+    LedDriver_TurnOff(8);
+    LONGS_EQUAL((~0x180)&0xFFFF, virtualLeds);
+}
+
+TEST(LedDriver, AllOff)
+{
+    LedDriver_TurnAllOn();
+    LedDriver_TurnAllOff();
+    LONGS_EQUAL(0, virtualLeds);
+}
