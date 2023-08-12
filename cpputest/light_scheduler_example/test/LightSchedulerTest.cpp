@@ -30,6 +30,10 @@ TEST_GROUP(LightScheduler)
     }
 };
 
+TEST_GROUP(LightSchedulerInitAndCleanup)
+{
+};
+
 TEST(LightScheduler, NoChangeToLightsDuringInitialization)
 {
     checkLightState(LIGHT_ID_UNKNOWN, LIGHT_STATE_UNKNOWN);
@@ -144,4 +148,19 @@ TEST(LightScheduler, ScheduleWeekdayItsFriday)
     setTimeTo(FRIDAY, 1200);
     LightScheduler_WakeUp();
     checkLightState(3, LIGHT_ON);
+}
+
+TEST(LightSchedulerInitAndCleanup, CreateStartsOneMinuteAlarm)
+{
+    LightScheduler_Create();
+    POINTERS_EQUAL((void*)LightScheduler_WakeUp, (void*)FakeTimeService_GetAlarmCallback());
+    LONGS_EQUAL(60, FakeTimeService_GetAlarmPeriod());
+    LightScheduler_Destroy();
+}
+
+TEST(LightSchedulerInitAndCleanup, DestroyCancelOneMinuteAlarm)
+{
+    LightScheduler_Create();
+    LightScheduler_Destroy();
+    POINTERS_EQUAL(NULL, (void*)FakeTimeService_GetAlarmCallback());
 }

@@ -14,6 +14,8 @@ enum
 
 void FakeTimeService_SetDay(int day);
 void FakeTimeService_SetMinute(int minute);
+WakeUpCallback FakeTimeService_GetAlarmCallback(void);
+int FakeTimeService_GetAlarmPeriod(void);
 
 #ifdef __cplusplus
 }
