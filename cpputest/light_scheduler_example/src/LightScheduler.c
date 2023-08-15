@@ -1,11 +1,13 @@
 #include <stdbool.h>
 #include "LightScheduler.h"
 #include "LightController.h"
+#include "RandomMinute.h"
 
 enum
 {
     UNUSED = -1,
     TURN_ON, TURN_OFF,
+    RANDOM_ON, RANDOM_OFF,
     MAX_EVENTS = 128
 };
 
@@ -15,6 +17,8 @@ typedef struct
     int minuteOfDay;
     int day;
     int event;
+    int randomize;
+    int randomMinutes;
 }ScheduledLightEvent;
 
 static ScheduledLightEvent scheduledEvents[MAX_EVENTS];
@@ -34,6 +38,8 @@ static int scheduleEvent(int id, Day day, int minuteOfDay, int event)
             scheduledEvents[i].day = day;
             scheduledEvents[i].event = event;
             scheduledEvents[i].id = id;
+            scheduledEvents[i].randomize = RANDOM_OFF;
+            scheduledEvents[i].randomMinutes = 0;
             return LS_OK;
         }
     }
@@ -73,7 +79,7 @@ static void processEventDueNow(Time* time, ScheduledLightEvent* lightEvent)
         return;
     if(!DoesLightRespondToday(time, lightEvent->day))
         return;
-    if(lightEvent->minuteOfDay != time->minuteOfDay)
+    if(lightEvent->minuteOfDay + lightEvent->randomMinutes != time->minuteOfDay)
         return;
 
     operateLight(lightEvent);
@@ -127,6 +133,21 @@ void LightScheduler_ScheduleRemove(int id, Day day, int minute)
            scheduledEvents[i].minuteOfDay == minute)
         {
             scheduledEvents[i].id = UNUSED;
+        }
+    }
+}
+
+void LightScheduler_Randomize(int id, Day day, int minute)
+{
+    int i;
+
+    for(i = 0; i < MAX_EVENTS; i++)
+    {
+        ScheduledLightEvent* e = &scheduledEvents[i];
+        if(e->id == id && e->day == day && e->minuteOfDay == minute)
+        {
+            e->randomize = RANDOM_ON;
+            e->randomMinutes = RandomMinute_Get();
         }
     }
 }
