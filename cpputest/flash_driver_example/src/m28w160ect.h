@@ -19,7 +19,14 @@ typedef enum
 
 typedef enum
 {
-    ReadyBit = 1 << 7
+    ReadyBit = 1 << 7,
+    EraseSuspendBit = 1 << 6,
+    EraseErrorBit = 1 << 5,
+    ProgramErrorBit = 1 << 4,
+    VppErrorBit = 1 << 3,
+    ProgramSuspendBit = 1 << 2,
+    BlockProtectionErrorBit = 1 << 1,
+    ReservedBit = 1
 }StatusRegisterBits;
 
 #ifdef __cplusplus
