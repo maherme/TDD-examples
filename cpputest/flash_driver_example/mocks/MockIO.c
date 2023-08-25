@@ -39,7 +39,8 @@ static const char* report_expect_read_was_write = "Expected IO_Read(0x%x) would 
 static const char* report_expect_write_was_read = "Expected IO_Write(0x%x, 0x%x)\n"
                                                   "\t        But was IO_Read(0x%x)";
 static const char* report_expectation_number = "R/W %d ";
-static const char* report_read_wrong_address = "Expected IO_Read(0x%x) returns 0x%x;\n";
+static const char* report_read_wrong_address = "Expected IO_Read(0x%x) returns 0x%x;\n"
+                                               "\t        But was IO_Read(0x%x)";
 
 static void fail(const char* message)
 {
