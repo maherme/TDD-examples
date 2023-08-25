@@ -14,7 +14,8 @@ typedef enum
     FLASH_PROGRAM_ERROR,
     FLASH_PROTECTED_BLOCK_ERROR,
     FLASH_UNKNOWN_PROGRAM_ERROR,
-    FLASH_READ_BACK_ERROR
+    FLASH_READ_BACK_ERROR,
+    FLASH_TIMEOUT_ERROR
 }FlashStatus;
 
 int Flash_Write(ioAddress address, ioData data);

@@ -2,6 +2,7 @@
 #include "Flash.h"
 #include "MockIO.h"
 #include "m28w160ect.h"
+#include "FakeMicroTime.h"
 
 TEST_GROUP(Flash)
 {
@@ -15,7 +16,7 @@ TEST_GROUP(Flash)
         data = 0xBEEF;
         result = -1;
 
-        MockIO_Create(10);
+        MockIO_Create(12);
     }
 
     void teardown(void)
@@ -118,5 +119,29 @@ TEST(Flash, WriteFails_FlashReadBackError)
 
     result = Flash_Write(address, data);
     LONGS_EQUAL(FLASH_READ_BACK_ERROR, result);
+}
+
+TEST(Flash, WriteFails_Timeout)
+{
+    FakeMicroTime_Init(0, 500);
+    MockIO_Expect_Write(CommandRegister, ProgramCommand);
+    MockIO_Expect_Write(address, data);
+    for(int i = 0; i < 10; i++)
+        MockIO_Expect_ReadThenReturn(StatusRegister, ~ReadyBit);
+
+    result = Flash_Write(address, data);
+    LONGS_EQUAL(FLASH_TIMEOUT_ERROR, result);
+}
+
+TEST(Flash, WriteFails_TimeoutAtEndOfTime)
+{
+    FakeMicroTime_Init(0xFFFFFFFF, 500);
+    MockIO_Expect_Write(CommandRegister, ProgramCommand);
+    MockIO_Expect_Write(address, data);
+    for(int i = 0; i < 10; i++)
+        MockIO_Expect_ReadThenReturn(StatusRegister, ~ReadyBit);
+
+    result = Flash_Write(address, data);
+    LONGS_EQUAL(FLASH_TIMEOUT_ERROR, result);
 }
 
